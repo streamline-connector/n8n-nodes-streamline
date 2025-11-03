@@ -1,6 +1,6 @@
 {
   "git": {
-    "requireBranch": "master",
+    "requireBranch": "main",
     "commitMessage": "Release v${version}",
     "tagName": "v${version}",
     "push": true,
