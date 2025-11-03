@@ -1,19 +1,27 @@
 {
-	"name": "n8n-nodes-<...>",
-	"version": "0.1.0",
-	"description": "",
+	"name": "n8n-nodes-streamline",
+	"version": "0.2.0",
+	"description": "n8n node for the Streamline Connector API integration",
 	"license": "MIT",
-	"homepage": "",
+	"homepage": "https://streamlineconnector.com",
 	"keywords": [
-		"n8n-community-node-package"
+		"n8n",
+		"n8n-community-node",
+		"n8n-community-node-package",
+		"streamline-connector",
+		"automation",
+		"ecommerce",
+		"shopify",
+		"orders",
+		"product-recommendations"
 	],
 	"author": {
-		"name": "",
-		"email": ""
+		"name": "Streamline Connector",
+		"email": "devs@streamlineconnector.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/<...>/n8n-nodes-<...>.git"
+		"url": "https://github.com/streamline-connector/n8n-nodes-streamline.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",
@@ -31,14 +39,13 @@
 		"n8nNodesApiVersion": 1,
 		"strict": true,
 		"credentials": [
-			"dist/credentials/GithubIssuesApi.credentials.js",
-			"dist/credentials/GithubIssuesOAuth2Api.credentials.js"
+			"dist/credentials/StreamlineApi.credentials.js"
 		],
 		"nodes": [
-			"dist/nodes/GithubIssues/GithubIssues.node.js",
-			"dist/nodes/Example/Example.node.js"
+			"dist/nodes/Streamline/Streamline.node.js"
 		]
 	},
+	"types": "dist/nodes/Streamline/Streamline.node.d.ts",
 	"devDependencies": {
 		"@n8n/node-cli": "*",
 		"eslint": "9.32.0",
