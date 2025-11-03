@@ -2,7 +2,7 @@
 
 ![n8n.io - Workflow Automation](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png)
 
-This is an n8n community node that connects your **Shopify eCommerce data** to [n8n](https://n8n.io) through the **Streamline Connector API**. It enables you to retrieve products, orders, customers, and inventory data from Shopify to automate workflows and integrate with other services.
+This is an n8n community node that connects your **Shopify eCommerce data** to [n8n](https://n8n.io) through the **Streamline Connector API**. It enables you to retrieve products, orders, and inventory data from Shopify to automate workflows and integrate with other services.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
 
