@@ -46,7 +46,7 @@ class Streamline {
                         {
                             name: 'Get Order(s)',
                             value: 'get',
-                            action: 'Get shopify order s',
+                            action: 'Get shopify orders',
                             description: 'Get Shopify Order/s using email or order number',
                             routing: { request: { method: 'GET', url: '/api/order-data' } },
                         },
