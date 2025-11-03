@@ -1,0 +1,18 @@
+{
+  "git": {
+    "requireBranch": "master",
+    "commitMessage": "Release v${version}",
+    "tagName": "v${version}",
+    "push": true,
+    "requireCleanWorkingDir": false
+  },
+  "npm": {
+    "publish": true
+  },
+  "github": {
+    "release": true
+  },
+  "hooks": {
+    "before:init": ["npm run lint", "npm run build"]
+  }
+}
