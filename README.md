@@ -62,7 +62,6 @@ The Streamline node supports the following operations:
 |----------|-----------|-------------|
 | **Products** | Get Products | Retrieve Shopify product data through Streamline |
 | **Orders** | Get Orders | Fetch recent orders and order details |
-| **Customers** | Get Customers | Access customer information and profiles |
 | **Inventory** | Get Inventory | Retrieve stock levels and availability data |
 
 ## Credentials
@@ -72,8 +71,7 @@ To use the Streamline node, you need to set up Streamline API credentials:
 1. In n8n, go to **Credentials → New**
 2. Search for and select **Streamline API**
 3. Enter your credentials:
-   - **Base URL** – Your Streamline API endpoint
-   - **API Key** – Your Streamline access key
+   - **Streamline Shop ID** – Your Streamline access key (found in the app dashboard > Any endpoint page)
 4. Click **Save** and test the connection
 
 Once configured, select these credentials when using any Streamline node in your workflows.
@@ -112,13 +110,7 @@ Here are some common use cases for the Streamline node:
 - Slack/Email Node: Send alert
 - Use case: Monitor inventory levels
 
-**3. Customer Data Sync**
-- Trigger: Webhook or Schedule
-- Streamline Node: Get Customers
-- Klaviyo/HubSpot Node: Update contacts
-- Use case: Keep marketing platforms in sync
-
-**4. Product Catalog Integration**
+**3. Product Catalog Integration**
 - Trigger: Manual or Schedule
 - Streamline Node: Get Products
 - Your Service: Update product database
