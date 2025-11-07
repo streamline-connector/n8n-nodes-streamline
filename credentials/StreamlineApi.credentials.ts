@@ -6,11 +6,13 @@ import type {
 } from 'n8n-workflow';
 
 export class StreamlineApi implements ICredentialType {
-	name = 'StreamlineApi';
+	name = 'streamlineApi';
 
 	displayName = 'Streamline API';
 
 	documentationUrl = 'https://docs.n8n.io/integrations/creating-nodes/build/declarative-style-node/';
+
+	icon = 'file:logo.svg' as const;
 
 	properties: INodeProperties[] = [
 		{
@@ -36,8 +38,15 @@ export class StreamlineApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: 'https://streamline-connector-for-voiceflow.gadget.app',
-			url: '/api/order-data',
+			url: '/products/inventory',
 			method: 'GET',
+			headers: {
+				'Authorization': 'Bearer gsk-xGZjqxkDrmeYjdYWGQmpBCcZhFzzNfh2',
+			},
+			qs: {
+				shopId: '={{$credentials.apiKey}}',
+				productTitle: 'test',
+			},
 		},
 	};
 }

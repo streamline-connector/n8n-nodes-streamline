@@ -7,12 +7,13 @@ export class Streamline implements INodeType {
 		icon: 'file:logo.svg',
 		group: ['transform'],
 		version: 1,
+		usableAsTool: true,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Call Streamline APIs',
 		defaults: { name: 'Streamline' },
 		inputs: ['main'],
 		outputs: ['main'],
-		credentials: [{ name: 'StreamlineApi', required: true }],
+		credentials: [{ name: 'streamlineApi', required: true }],
 		requestDefaults: {
 			baseURL: 'https://streamline-connector-for-voiceflow.gadget.app',
 			headers: {
