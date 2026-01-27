@@ -10,7 +10,7 @@ export class StreamlineApi implements ICredentialType {
 
 	displayName = 'Streamline API';
 
-	documentationUrl = 'https://docs.n8n.io/integrations/creating-nodes/build/declarative-style-node/';
+	documentationUrl = 'https://support.streamlineconnector.com/support/solutions/articles/154000248449-how-to-get-your-store-id-for-streamline-connector';
 
 	icon = 'file:logo.svg' as const;
 
