@@ -40,9 +40,6 @@ export class StreamlineApi implements ICredentialType {
 			baseURL: 'https://streamline-connector-for-voiceflow.gadget.app',
 			url: '/products/inventory',
 			method: 'GET',
-			headers: {
-				'Authorization': 'Bearer gsk-xGZjqxkDrmeYjdYWGQmpBCcZhFzzNfh2',
-			},
 			qs: {
 				shopId: '={{$credentials.apiKey}}',
 				productTitle: 'test',
