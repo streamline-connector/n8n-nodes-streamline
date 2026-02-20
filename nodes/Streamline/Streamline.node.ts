@@ -29,13 +29,13 @@ export class Streamline implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{ name: 'Get an order', value: 'getAnOrder' },
-					{ name: 'Get many orders', value: 'getManyOrders' },
-					{ name: 'Get AI Product Recommendation', value: 'getAiProductRecommendation' },
-					{ name: 'Get a product', value: 'getAProduct' },
-					// { name: 'Get Product List', value: 'getProductList' },
-					{ name: 'Get Inventory Locations', value: 'getInventoryLocations' },
 					{ name: 'Create a Discount', value: 'createADiscount' },
+					{ name: 'Get a Product', value: 'getAProduct' },
+					{ name: 'Get AI Product Recommendation', value: 'getAiProductRecommendation' },
+					{ name: 'Get an Order', value: 'getAnOrder' },
+					{ name: 'Get Inventory Location', value: 'getInventoryLocations' },
+					{ name: 'Get Many Order', value: 'getManyOrders' },
+					// { name: 'Get Product List', value: 'getProductList' },
 					// { name: 'Update Product', value: 'updateProduct' },
 					// { name: 'Update Variant', value: 'updateVariant' },
 					// { name: 'Update Product Description', value: 'updateProductDescription' },
@@ -50,7 +50,7 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['getAnOrder'] } },	
 				options: [
 					{
-						name: 'Get an order',
+						name: 'Get an Order',
 						value: 'get',
 						action: 'Get an order',
 						description: 'Get an order using email or order number',
@@ -111,7 +111,7 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['getManyOrders'] } },
 				options: [
 					{
-						name: 'Get many orders',
+						name: 'Get Many Orders',
 						value: 'get',
 						action: 'List orders with pagination',
 						description: 'Get paginated list of all orders (calls order-data API)',
@@ -222,7 +222,7 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['getAProduct'] } },
 				options: [
 					{
-						name: 'Get a product',
+						name: 'Get a Product',
 						value: 'get',
 						action: 'Get a product',
 						description: 'Get a product by title',
@@ -357,7 +357,7 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['createADiscount'] } },
 				options: [
 					{
-						name: 'Create a discount',
+						name: 'Create a Discount',
 						value: 'create',
 						action: 'Create a discount',
 						description: 'Create a new discount',
@@ -423,6 +423,7 @@ export class Streamline implements INodeType {
 				name: 'usageLimit',
 				type: 'number',
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				default: 0,
 				routing: { send: { property: 'usageLimit', type: 'body' } },
 			},
 			{
