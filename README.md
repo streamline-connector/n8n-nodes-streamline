@@ -58,11 +58,14 @@ docker run -it --rm \
 
 The Streamline node supports the following operations:
 
-| Resource | Operation | Description |
-|----------|-----------|-------------|
-| **Products** | Get Products | Retrieve Shopify product data through Streamline |
-| **Orders** | Get Orders | Fetch recent orders and order details |
-| **Inventory** | Get Inventory | Retrieve stock levels and availability data |
+| Resource                          | Operation               | Description                                                       |
+| --------------------------------- | ----------------------- | ----------------------------------------------------------------- |
+| **Get an order**                  | Get an order            | Get an order using email or order number (`/api/order-data`)      |
+| **Get many orders**               | Get many orders         | Get paginated list of all orders (`/api/order-data`, page & size) |
+| **Get AI Product Recommendation** | Get Recommendations     | Get AI-based product suggestions (`/products/recommendations`)    |
+| **Get a product**                 | Get a product           | Get a product by title – inventory/stock (`/products/inventory`)  |
+| **Get Inventory Locations**       | Get Inventory Locations | Retrieve store locations (`/products/locations`)                  |
+| **Create a Discount**             | Create a discount       | Create a new discount code (`/api/create-discount-code`)          |
 
 ## Credentials
 
@@ -98,12 +101,14 @@ To obtain your Streamline API credentials:
 Here are some common use cases for the Streamline node:
 
 **1. Sync Orders to Google Sheets**
+
 - Trigger: Schedule (every hour)
 - Streamline Node: Get Orders
 - Google Sheets: Append data
 - Use case: Create automated sales reports
 
 **2. Low Stock Alerts**
+
 - Trigger: Schedule (daily)
 - Streamline Node: Get Inventory
 - IF Node: Check if stock < threshold
@@ -111,6 +116,7 @@ Here are some common use cases for the Streamline node:
 - Use case: Monitor inventory levels
 
 **3. Product Catalog Integration**
+
 - Trigger: Manual or Schedule
 - Streamline Node: Get Products
 - Your Service: Update product database
@@ -168,6 +174,7 @@ npm run dev
 ```
 
 This command:
+
 - Builds your node with watch mode enabled
 - Starts n8n with your node available
 - Automatically rebuilds when you make changes
