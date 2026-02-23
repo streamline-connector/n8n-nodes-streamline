@@ -33,8 +33,8 @@ export class Streamline implements INodeType {
 					{ name: 'Get a Product', value: 'getAProduct' },
 					{ name: 'Get AI Product Recommendation', value: 'getAiProductRecommendation' },
 					{ name: 'Get an Order', value: 'getAnOrder' },
-					{ name: 'Get Inventory Location', value: 'getInventoryLocations' },
-					{ name: 'Get Many Order', value: 'getManyOrders' },
+					{ name: 'Get Inventory Locations', value: 'getInventoryLocations' },
+					{ name: 'Get Many Orders', value: 'getManyOrders' },
 					// { name: 'Get Product List', value: 'getProductList' },
 					// { name: 'Update Product', value: 'updateProduct' },
 					// { name: 'Update Variant', value: 'updateVariant' },
@@ -111,9 +111,9 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['getManyOrders'] } },
 				options: [
 					{
-						name: 'Get Many Order',
+						name: 'Get Many Orders',
 						value: 'get',
-						action: 'List orders with pagination',
+						action: 'Get Many Orders',
 						description: 'Get paginated list of all orders (calls order-data API)',
 						routing: { request: { method: 'GET', url: '/api/order-data' } },
 					},
@@ -165,7 +165,7 @@ export class Streamline implements INodeType {
 					{
 						name: 'Get Recommendations',
 						value: 'get',
-						action: 'Get ai product recommendations',
+						action: 'Get AI Product Recommendations',
 						description: 'Get AI-based product suggestions',
 						routing: { request: { method: 'GET', url: '/products/recommendations' } },
 					},
@@ -331,7 +331,7 @@ export class Streamline implements INodeType {
 					{
 						name: 'Get Inventory Locations',
 						value: 'get',
-						action: 'Get store locations',
+						action: 'Get Inventory Locations',
 						description: 'Retrieve Store locations',
 						routing: { request: { method: 'GET', url: '/products/locations' } },
 					},
@@ -374,7 +374,7 @@ export class Streamline implements INodeType {
 				required: true,
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
 				default: '',
-				routing: { send: { property: 'title', type: 'body' } },
+				routing: { send: { property: 'title', type: 'query' } },
 			},
 			{
 				displayName: 'Code',
@@ -384,17 +384,51 @@ export class Streamline implements INodeType {
 				required: true,
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
 				default: '',
-				routing: { send: { property: 'code', type: 'body' } },
+				routing: { send: { property: 'code', type: 'query' } },
+			},
+			{
+				displayName: 'Customer Gets - Percentage(0 ~ 1)',
+				description: 'Numeric value (e.g. 0.2 for 20%)',
+				name: 'customerGetsValueNumber',
+				type: 'number',
+				required: true,
+				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				default: 0,
+			},
+			{
+				displayName: 'Customer Gets - Items',
+				description: 'Apply discount to all items or a single product',
+				name: 'customerGetsItems',
+				type: 'options',
+				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				options: [
+					{ name: 'All', value: 'all' },
+					{ name: 'Single Product', value: 'singleProduct' },
+				],
+				default: 'all',
+			},
+			{
+				displayName: 'Product ID',
+				description: 'Shopify product GID (e.g. gid://shopify/Product/123456789012345)',
+				name: 'customerGetsProductId',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['createADiscount'],
+						operation: ['create'],
+						customerGetsItems: ['singleProduct'],
+					},
+				},
+				default: '',
+				placeholder: 'gid://shopify/Product/123456789012345',
 			},
 			{
 				displayName: 'Customer Gets',
-				description: 'JSON: what the customer gets (e.g. {"value":"PERCENTAGE","valueType":"percentage","valueNumber":20})',
 				name: 'customerGets',
-				type: 'string',
-				required: true,
+				type: 'hidden',
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
-				default: '',
-				placeholder: '{"value":"PERCENTAGE","valueType":"percentage","valueNumber":20}',
+				default: '={{ (() => { const pct = $parameter.customerGetsValueNumber ?? 0; const itemsMode = $parameter.customerGetsItems; const productId = String($parameter.customerGetsProductId || "").trim(); const gid = productId.startsWith("gid://") ? productId : (productId ? "gid://shopify/Product/" + productId : ""); return { value: { percentage: pct }, items: itemsMode === "singleProduct" && gid ? { products: { productsToAdd: [gid] } } : { all: true }; })() }}',
 				routing: { send: { property: 'customerGets', type: 'body' } },
 			},
 			{
@@ -406,7 +440,7 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
 				default: '',
 				placeholder: '2025-01-01T00:00:00Z',
-				routing: { send: { property: 'startsAt', type: 'body' } },
+				routing: { send: { property: 'startsAt', type: 'query' } },
 			},
 			{
 				displayName: 'Ends At',
@@ -415,7 +449,7 @@ export class Streamline implements INodeType {
 				type: 'string',
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
 				default: '',
-				routing: { send: { property: 'endsAt', type: 'body' } },
+				routing: { send: { property: 'endsAt', type: 'query' } },
 			},
 			{
 				displayName: 'Usage Limit',
@@ -424,7 +458,7 @@ export class Streamline implements INodeType {
 				type: 'number',
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
 				default: 0,
-				routing: { send: { property: 'usageLimit', type: 'body' } },
+				routing: { send: { property: 'usageLimit', type: 'query' } },
 			},
 			{
 				displayName: 'Applies Once Per Customer',
@@ -433,7 +467,7 @@ export class Streamline implements INodeType {
 				type: 'boolean',
 				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
 				default: false,
-				routing: { send: { property: 'appliesOncePerCustomer', type: 'body' } },
+				routing: { send: { property: 'appliesOncePerCustomer', type: 'query' } },
 			},
 
 
