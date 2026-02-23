@@ -113,7 +113,7 @@ export class Streamline implements INodeType {
 					{
 						name: 'Get Many Orders',
 						value: 'get',
-						action: 'Get Many Orders',
+						action: 'Get many orders',
 						description: 'Get paginated list of all orders (calls order-data API)',
 						routing: { request: { method: 'GET', url: '/api/order-data' } },
 					},
@@ -165,7 +165,7 @@ export class Streamline implements INodeType {
 					{
 						name: 'Get Recommendations',
 						value: 'get',
-						action: 'Get AI Product Recommendations',
+						action: 'Get AI product recommendations',
 						description: 'Get AI-based product suggestions',
 						routing: { request: { method: 'GET', url: '/products/recommendations' } },
 					},
@@ -331,7 +331,7 @@ export class Streamline implements INodeType {
 					{
 						name: 'Get Inventory Locations',
 						value: 'get',
-						action: 'Get Inventory Locations',
+						action: 'Get inventory locations',
 						description: 'Retrieve Store locations',
 						routing: { request: { method: 'GET', url: '/products/locations' } },
 					},
@@ -412,7 +412,7 @@ export class Streamline implements INodeType {
 				description: 'Shopify product GID (e.g. gid://shopify/Product/123456789012345)',
 				name: 'customerGetsProductId',
 				type: 'string',
-				required: true,
+				// required: true,
 				displayOptions: {
 					show: {
 						resource: ['createADiscount'],
