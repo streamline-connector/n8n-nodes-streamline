@@ -2,7 +2,7 @@ import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
 
 export class Streamline implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Streamline',
+		displayName: 'Streamline for Shopify',
 		name: 'streamline',
 		icon: 'file:logo.svg',
 		group: ['transform'],
@@ -10,7 +10,7 @@ export class Streamline implements INodeType {
 		usableAsTool: true,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Call Streamline APIs',
-		defaults: { name: 'Streamline' },
+		defaults: { name: 'Streamline for Shopify' },
 		inputs: ['main'],
 		outputs: ['main'],
 		credentials: [{ name: 'streamlineApi', required: true }],
@@ -111,7 +111,7 @@ export class Streamline implements INodeType {
 				displayOptions: { show: { resource: ['getManyOrders'] } },
 				options: [
 					{
-						name: 'Get Many Orders',
+						name: 'Get Many Order',
 						value: 'get',
 						action: 'List orders with pagination',
 						description: 'Get paginated list of all orders (calls order-data API)',
