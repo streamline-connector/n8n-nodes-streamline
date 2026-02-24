@@ -29,9 +29,9 @@ export class Streamline implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{ name: 'Order Actions', value: 'orderActions' },
-					{ name: 'Product Actions', value: 'productActions' },
-					{ name: 'Additional Actions', value: 'additionalActions' },
+					{ name: 'Order', value: 'orderActions' },
+					{ name: 'Product', value: 'productActions' },
+					{ name: 'Additional', value: 'additionalActions' },
 					
 					// { name: 'Get Product List', value: 'getProductList' },
 					// { name: 'Update Product', value: 'updateProduct' },
