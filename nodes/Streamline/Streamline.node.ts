@@ -8,7 +8,7 @@ export class Streamline implements INodeType {
 		group: ['transform'],
 		version: 1,
 		usableAsTool: true,
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+		subtitle: '={{ $parameter.resource === "orderActions" ? ($parameter.operation === "getOne" ? "Get an order" : "Get many orders") : $parameter.resource === "productActions" ? ($parameter.operation === "getOne" ? "Get a product" : "Get many products") : $parameter.resource === "additionalActions" ? ($parameter.operation === "getRecommendations" ? "Get AI product recommendations" : $parameter.operation === "getLocations" ? "Get inventory locations" : $parameter.operation === "createDiscount" ? "Create a discount" : $parameter.operation) : $parameter.operation }}',
 		description: 'Call Streamline APIs',
 		defaults: { name: 'Streamline for Shopify' },
 		inputs: ['main'],
@@ -29,35 +29,40 @@ export class Streamline implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{ name: 'Create a Discount', value: 'createADiscount' },
-					{ name: 'Get a Product', value: 'getAProduct' },
-					{ name: 'Get AI Product Recommendation', value: 'getAiProductRecommendation' },
-					{ name: 'Get an Order', value: 'getAnOrder' },
-					{ name: 'Get Inventory Locations', value: 'getInventoryLocations' },
-					{ name: 'Get Many Orders', value: 'getManyOrders' },
+					{ name: 'Order Actions', value: 'orderActions' },
+					{ name: 'Product Actions', value: 'productActions' },
+					{ name: 'Additional Actions', value: 'additionalActions' },
+					
 					// { name: 'Get Product List', value: 'getProductList' },
 					// { name: 'Update Product', value: 'updateProduct' },
 					// { name: 'Update Variant', value: 'updateVariant' },
 					// { name: 'Update Product Description', value: 'updateProductDescription' },
 				],
-				default: 'getAnOrder',
+				default: 'productActions',
 			},
 			{
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
-				displayOptions: { show: { resource: ['getAnOrder'] } },	
+				displayOptions: { show: { resource: ['orderActions'] } },
 				options: [
 					{
 						name: 'Get an Order',
-						value: 'get',
+						value: 'getOne',
 						action: 'Get an order',
 						description: 'Get an order using email or order number',
 						routing: { request: { method: 'GET', url: '/api/order-data' } },
 					},
+					{
+						name: 'Get Many Orders',
+						value: 'getMany',
+						action: 'Get many orders',
+						description: 'Get paginated list of all orders',
+						routing: { request: { method: 'GET', url: '/api/order-data' } },
+					},
 				],
-				default: 'get',
+				default: 'getOne',
 			},
 			{
 				displayName: 'Customer Email',
@@ -65,7 +70,7 @@ export class Streamline implements INodeType {
 				name: 'email',
 				type: 'string',
 				placeholder: 'name@email.com',
-				displayOptions: { show: { resource: ['getAnOrder'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['orderActions'], operation: ['getOne'] } },
 				default: '',
 				routing: {
 					send: {
@@ -79,7 +84,7 @@ export class Streamline implements INodeType {
 				description: 'Specific order number to retrieve',
 				name: 'orderNumber',
 				type: 'string',
-				displayOptions: { show: { resource: ['getAnOrder'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['orderActions'], operation: ['getOne'] } },
 				default: '',
 				routing: {
 					send: {
@@ -93,7 +98,7 @@ export class Streamline implements INodeType {
 				description: 'The format of the response. Choose either LLM enriched data or RAW.',
 				name: 'format',
 				type: 'hidden',
-				displayOptions: { show: { resource: ['getAnOrder'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['orderActions'], operation: ['getOne'] } },
 				default: 'llm-ready',
 				routing: {
 					send: {
@@ -102,30 +107,12 @@ export class Streamline implements INodeType {
 					},
 				},
 			},
-			// ---- Get Order List (uses /api/order-data with page & size) ----
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: { show: { resource: ['getManyOrders'] } },
-				options: [
-					{
-						name: 'Get Many Orders',
-						value: 'get',
-						action: 'Get many orders',
-						description: 'Get paginated list of all orders (calls order-data API)',
-						routing: { request: { method: 'GET', url: '/api/order-data' } },
-					},
-				],
-				default: 'get',
-			},
 			{
 				displayName: 'Page',
 				description: 'Page number (1-based). Use 1 for the first page.',
 				name: 'page',
 				type: 'number',
-				displayOptions: { show: { resource: ['getManyOrders'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['orderActions'], operation: ['getMany'] } },
 				default: 1,
 				typeOptions: { minValue: 1, maxValue: 1000 },
 				routing: {
@@ -137,7 +124,7 @@ export class Streamline implements INodeType {
 				description: 'Number of orders per page (max 10 for this endpoint)',
 				name: 'size',
 				type: 'number',
-				displayOptions: { show: { resource: ['getManyOrders'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['orderActions'], operation: ['getMany'] } },
 				default: 10,
 				typeOptions: { minValue: 1, maxValue: 10 },
 				routing: {
@@ -148,29 +135,43 @@ export class Streamline implements INodeType {
 				displayName: 'Format',
 				name: 'format',
 				type: 'hidden',
-				displayOptions: { show: { resource: ['getManyOrders'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['orderActions'], operation: ['getMany'] } },
 				default: 'llm-ready',
 				routing: {
 					send: { property: 'format', type: 'query' },
 				},
 			},
-			// ---- Get AI Product Recommendation ----
+			// ---- Additional actions ----
 			{
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
-				displayOptions: { show: { resource: ['getAiProductRecommendation'] } },
+				displayOptions: { show: { resource: ['additionalActions'] } },
 				options: [
 					{
-						name: 'Get Recommendations',
-						value: 'get',
+						name: 'Get AI Product Recommendations',
+						value: 'getRecommendations',
 						action: 'Get AI product recommendations',
 						description: 'Get AI-based product suggestions',
 						routing: { request: { method: 'GET', url: '/products/recommendations' } },
 					},
+					{
+						name: 'Get Inventory Locations',
+						value: 'getLocations',
+						action: 'Get inventory locations',
+						description: 'Retrieve store locations',
+						routing: { request: { method: 'GET', url: '/products/locations' } },
+					},
+					{
+						name: 'Create a Discount',
+						value: 'createDiscount',
+						action: 'Create a discount',
+						description: 'Create a new discount code',
+						routing: { request: { method: 'POST', url: '/api/create-discount-code' } },
+					},
 				],
-				default: 'get',
+				default: 'getRecommendations',
 			},
 			{
 				displayName: 'Query',
@@ -180,8 +181,8 @@ export class Streamline implements INodeType {
 				type: 'string',
 				displayOptions: {
 					show: {
-						resource: ['getAiProductRecommendation'],
-						operation: ['get'],
+						resource: ['additionalActions'],
+						operation: ['getRecommendations'],
 					},
 				},
 				default: '',
@@ -199,8 +200,8 @@ export class Streamline implements INodeType {
 				type: 'hidden',
 				displayOptions: {
 					show: {
-						resource: ['getAiProductRecommendation'],
-						operation: ['get'],
+						resource: ['additionalActions'],
+						operation: ['getRecommendations'],
 					},
 				},
 				default: 'llm-ready',
@@ -213,37 +214,85 @@ export class Streamline implements INodeType {
 			},
 
 
-			// ---- Get a product ----
+			// ---- Product actions ----
 			{
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
-				displayOptions: { show: { resource: ['getAProduct'] } },
+				displayOptions: { show: { resource: ['productActions'] } },
 				options: [
 					{
 						name: 'Get a Product',
-						value: 'get',
+						value: 'getOne',
 						action: 'Get a product',
-						description: 'Get a product by title',
+						description: 'Get a product by ID or title',
+						routing: {
+							request: { method: 'GET', url: '/products/inventory' }
+						},
+					},
+					{
+						name: 'Get Many Products',
+						value: 'getMany',
+						action: 'Get many products',
+						description: 'Get inventory for all products (by shop)',
 						routing: { request: { method: 'GET', url: '/products/inventory' } },
 					},
 				],
-				default: 'get',
+				default: 'getOne',
+			},
+			{
+				displayName: 'Look Up By',
+				description: 'Search by product ID or product title',
+				name: 'searchQuery',
+				type: 'options',
+				displayOptions: {
+					show: {
+						resource: ['productActions'],
+						operation: ['getOne'],
+					},
+				},
+				options: [
+					{ name: 'Product ID', value: 'productId' },
+					{ name: 'Product Title', value: 'productTitle' },
+				],
+				default: 'productId',
+			},
+			{
+				displayName: 'Product ID',
+				description: 'Numeric ID or Shopify GID (e.g. gid://shopify/Product/123456789)',
+				name: 'productId',
+				type: 'string',
+				displayOptions: {
+					show: {
+						resource: ['productActions'],
+						operation: ['getOne'],
+						searchQuery: ['productId'],
+					},
+				},
+				default: '',
+				placeholder: '123456789012345 or gid://shopify/Product/123456789',
+				routing: {
+					send: {
+						property: 'productId',
+						type: 'query',
+					},
+				},
 			},
 			{
 				displayName: 'Product Title',
-				description: 'Title of the product to check inventory for',
-				required: true,
+				description: 'Search by product title',
 				name: 'productTitle',
 				type: 'string',
 				displayOptions: {
 					show: {
-						resource: ['getAProduct'],
-						operation: ['get'],
+						resource: ['productActions'],
+						operation: ['getOne'],
+						searchQuery: ['productTitle'],
 					},
 				},
 				default: '',
+				placeholder: 'Blue Shirt',
 				routing: {
 					send: {
 						property: 'productTitle',
@@ -258,8 +307,8 @@ export class Streamline implements INodeType {
 				type: 'hidden',
 				displayOptions: {
 					show: {
-						resource: ['getAProduct'],
-						operation: ['get'],
+						resource: ['productActions'],
+						operation: ['getOne'],
 					},
 				},
 				default: 'llm-ready',
@@ -270,7 +319,65 @@ export class Streamline implements INodeType {
 					},
 				},
 			},
-
+			// {
+			// 	displayName: 'Shop ID',
+			// 	description: 'Shop ID (e.g. 12345)',
+			// 	name: 'shopId',
+			// 	type: 'string',
+			// 	required: true,
+			// 	displayOptions: {
+			// 		show: {
+			// 			resource: ['productActions'],
+			// 			operation: ['getMany'],
+			// 		},
+			// 	},
+			// 	default: '',
+			// 	placeholder: '12345',
+			// 	routing: { send: { property: 'shopId', type: 'query' } },
+			// },
+			{
+				displayName: 'Page',
+				description: 'Page number (1-based). Use 1 for the first page.',
+				name: 'page',
+				type: 'number',
+				typeOptions: { minValue: 1 },
+				displayOptions: {
+					show: {
+						resource: ['productActions'],
+						operation: ['getMany'],
+					},
+				},
+				default: 1,
+				routing: { send: { property: 'page', type: 'query' } },
+			},
+			{
+				displayName: 'Size',
+				description: 'Number of products per page',
+				name: 'size',
+				type: 'number',
+				typeOptions: { minValue: 1, maxValue: 250 },
+				displayOptions: {
+					show: {
+						resource: ['productActions'],
+						operation: ['getMany'],
+					},
+				},
+				default: 50,
+				routing: { send: { property: 'size', type: 'query' } },
+			},
+			{
+				displayName: 'Format',
+				name: 'format',
+				type: 'hidden',
+				displayOptions: {
+					show: {
+						resource: ['productActions'],
+						operation: ['getMany'],
+					},
+				},
+				default: 'llm-ready',
+				routing: { send: { property: 'format', type: 'query' } },
+			},
 
 			// ---- Get Product List ----
 			// {
@@ -320,51 +427,13 @@ export class Streamline implements INodeType {
 			// },
 
 
-			// ---- Get Inventory Locations ----
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: { show: { resource: ['getInventoryLocations'] } },
-				options: [
-					{
-						name: 'Get Inventory Locations',
-						value: 'get',
-						action: 'Get inventory locations',
-						description: 'Retrieve Store locations',
-						routing: { request: { method: 'GET', url: '/products/locations' } },
-					},
-				],
-				default: 'get',
-			},
 			{
 				displayName: 'Format',
 				name: 'format',
 				type: 'hidden',
-				displayOptions: { show: { resource: ['getInventoryLocations'], operation: ['get'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['getLocations'] } },
 				default: 'llm-ready',
 				routing: { send: { property: 'format', type: 'query' } },
-			},
-
-
-			// ---- Create a discount ----
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: { show: { resource: ['createADiscount'] } },
-				options: [
-					{
-						name: 'Create a Discount',
-						value: 'create',
-						action: 'Create a discount',
-						description: 'Create a new discount',
-						routing: { request: { method: 'POST', url: '/api/create-discount-code' } },
-					},
-				],
-				default: 'create',
 			},
 			{
 				displayName: 'Title',
@@ -372,7 +441,7 @@ export class Streamline implements INodeType {
 				name: 'title',
 				type: 'string',
 				required: true,
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: '',
 				routing: { send: { property: 'title', type: 'query' } },
 			},
@@ -382,7 +451,7 @@ export class Streamline implements INodeType {
 				name: 'code',
 				type: 'string',
 				required: true,
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: '',
 				routing: { send: { property: 'code', type: 'query' } },
 			},
@@ -392,7 +461,7 @@ export class Streamline implements INodeType {
 				name: 'customerGetsValueNumber',
 				type: 'number',
 				required: true,
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: 0,
 			},
 			{
@@ -400,7 +469,7 @@ export class Streamline implements INodeType {
 				description: 'Apply discount to all items or a single product',
 				name: 'customerGetsItems',
 				type: 'options',
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				options: [
 					{ name: 'All', value: 'all' },
 					{ name: 'Single Product', value: 'singleProduct' },
@@ -415,7 +484,7 @@ export class Streamline implements INodeType {
 				// required: true,
 				displayOptions: {
 					show: {
-						resource: ['createADiscount'],
+						resource: ['additionalActions'],
 						operation: ['create'],
 						customerGetsItems: ['singleProduct'],
 					},
@@ -424,12 +493,20 @@ export class Streamline implements INodeType {
 				placeholder: 'gid://shopify/Product/123456789012345',
 			},
 			{
-				displayName: 'Customer Gets',
-				name: 'customerGets',
+				displayName: 'Customer Gets (Value)',
+				name: 'customerGetsValue',
 				type: 'hidden',
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
-				default: '={{ (() => { const pct = $parameter.customerGetsValueNumber ?? 0; const itemsMode = $parameter.customerGetsItems; const productId = String($parameter.customerGetsProductId || "").trim(); const gid = productId.startsWith("gid://") ? productId : (productId ? "gid://shopify/Product/" + productId : ""); return { value: { percentage: pct }, items: itemsMode === "singleProduct" && gid ? { products: { productsToAdd: [gid] } } : { all: true }; })() }}',
-				routing: { send: { property: 'customerGets', type: 'body' } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
+				default: '={{ { percentage: Number($parameter.customerGetsValueNumber) || 0 } }}',
+				routing: { send: { property: 'customerGets.value', type: 'body' } },
+			},
+			{
+				displayName: 'Customer Gets (Items)',
+				name: 'customerGetsItemsBody',
+				type: 'hidden',
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
+				default: '={{ $parameter.customerGetsItems === "singleProduct" && $parameter.customerGetsProductId ? { products: { productsToAdd: ["gid://shopify/Product/" + $parameter.customerGetsProductId] } } : { all: true } }}',
+				routing: { send: { property: 'customerGets.items', type: 'body' } },
 			},
 			{
 				displayName: 'Starts At',
@@ -437,7 +514,7 @@ export class Streamline implements INodeType {
 				name: 'startsAt',
 				type: 'string',
 				required: true,
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: '',
 				placeholder: '2025-01-01T00:00:00Z',
 				routing: { send: { property: 'startsAt', type: 'query' } },
@@ -447,7 +524,7 @@ export class Streamline implements INodeType {
 				description: 'ISO date when the discount ends (optional)',
 				name: 'endsAt',
 				type: 'string',
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: '',
 				routing: { send: { property: 'endsAt', type: 'query' } },
 			},
@@ -456,7 +533,7 @@ export class Streamline implements INodeType {
 				description: 'Max number of times the code can be used (optional)',
 				name: 'usageLimit',
 				type: 'number',
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: 0,
 				routing: { send: { property: 'usageLimit', type: 'query' } },
 			},
@@ -465,7 +542,7 @@ export class Streamline implements INodeType {
 				description: 'Whether the discount applies only once per customer',
 				name: 'appliesOncePerCustomer',
 				type: 'boolean',
-				displayOptions: { show: { resource: ['createADiscount'], operation: ['create'] } },
+				displayOptions: { show: { resource: ['additionalActions'], operation: ['createDiscount'] } },
 				default: false,
 				routing: { send: { property: 'appliesOncePerCustomer', type: 'query' } },
 			},
