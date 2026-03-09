@@ -1,4 +1,5 @@
 import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionType } from 'n8n-workflow';
 
 export class Streamline implements INodeType {
 	description: INodeTypeDescription = {
@@ -11,8 +12,8 @@ export class Streamline implements INodeType {
 		subtitle: '={{ $parameter.resource === "orderActions" ? ($parameter.operation === "getOne" ? "Get an order" : "Get many orders") : $parameter.resource === "productActions" ? ($parameter.operation === "getOne" ? "Get a product" : $parameter.operation === "getMany" ? "Get many products" : $parameter.operation === "createProduct" ? "Create a product" : $parameter.operation === "createVariant" ? "Create a variant" : $parameter.operation === "updateProduct" ? "Update a product" : $parameter.operation === "updateVariant" ? "Update a variant" : $parameter.operation === "deleteProduct" ? "Delete a product" : $parameter.operation === "deleteVariant" ? "Delete a variant" : $parameter.operation) : $parameter.resource === "additionalActions" ? ($parameter.operation === "getRecommendations" ? "Get AI product recommendations" : $parameter.operation === "getLocations" ? "Get inventory locations" : $parameter.operation === "createDiscount" ? "Create a discount" : $parameter.operation) : $parameter.operation }}',
 		description: 'Call Streamline APIs',
 		defaults: { name: 'Streamline for Shopify' },
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
 		credentials: [{ name: 'streamlineApi', required: true }],
 		requestDefaults: {
 			baseURL: 'https://streamline-connector-for-voiceflow.gadget.app',
