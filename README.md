@@ -56,16 +56,35 @@ docker run -it --rm \
 
 ## Operations
 
-The Streamline node supports the following operations:
+The Streamline node supports three resources. Choose a resource, then an operation.
 
-| Resource                          | Operation               | Description                                                       |
-| --------------------------------- | ----------------------- | ----------------------------------------------------------------- |
-| **Get an order**                  | Get an order            | Get an order using email or order number (`/api/order-data`)      |
-| **Get many orders**               | Get many orders         | Get paginated list of all orders (`/api/order-data`, page & size) |
-| **Get AI Product Recommendation** | Get Recommendations     | Get AI-based product suggestions (`/products/recommendations`)    |
-| **Get a product**                 | Get a product           | Get a product by title – inventory/stock (`/products/inventory`)  |
-| **Get Inventory Locations**       | Get Inventory Locations | Retrieve store locations (`/products/locations`)                  |
-| **Create a Discount**             | Create a discount       | Create a new discount code (`/api/create-discount-code`)          |
+### Order
+
+| Operation        | Description                                                       |
+| ---------------- | ----------------------------------------------------------------- |
+| Get an Order     | Get an order by customer email or order number (`/api/order-data`) |
+| Get Many Orders  | Get paginated list of all orders (page & size) (`/api/order-data`) |
+
+### Product
+
+| Operation        | Description                                                                 |
+| ---------------- | --------------------------------------------------------------------------- |
+| Get a Product    | Get a product by ID or title – inventory/stock (`/products/inventory`)     |
+| Get Many Products| Get inventory for all products, with pagination (`/products/inventory`)     |
+| Create a Product | Create a new product in your store (`/products/create-product`)             |
+| Create a Variant | Add new variants to an existing product (`/products/create-variant`)         |
+| Update a Product | Update product title, vendor, tags, status, etc. (`/products/update-product`)|
+| Update a Variant | Update a variant’s price, SKU, inventory, etc. (`/products/update-variant`)  |
+| Delete a Product | Permanently delete a product (`/products/delete-product`)                   |
+| Delete a Variant | Delete a variant from a product (`/products/delete-variant`)                 |
+
+### Additional
+
+| Operation                  | Description                                              |
+| --------------------------| --------------------------------------------------------- |
+| Get AI Product Recommendations | Get AI-based product suggestions (`/products/recommendations`) |
+| Get Inventory Locations   | Retrieve store locations (`/products/locations`)          |
+| Create a Discount         | Create a new discount code (`/api/create-discount-code`) |
 
 ## Credentials
 
