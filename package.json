@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-streamline",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"description": "n8n node for the Streamline Connector API integration",
 	"license": "MIT",
 	"homepage": "https://streamlineconnector.com",
@@ -47,7 +47,7 @@
 	},
 	"types": "dist/nodes/Streamline/Streamline.node.d.ts",
 	"devDependencies": {
-		"@n8n/node-cli": "0.22.0",
+		"@n8n/node-cli": "0.23.0",
 		"eslint": "^9.0.0",
 		"prettier": "3.6.2",
 		"release-it": "^19.0.4",

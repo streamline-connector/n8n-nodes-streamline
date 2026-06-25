@@ -20,7 +20,6 @@ export class Streamline implements INodeType {
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
-				Authorization: 'Bearer gsk-xGZjqxkDrmeYjdYWGQmpBCcZhFzzNfh2',
 			},
 		},
 		properties: [

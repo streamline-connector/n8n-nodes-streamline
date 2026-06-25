@@ -19,7 +19,19 @@ export class StreamlineApi implements ICredentialType {
 			name: 'apiKey',
 			type: 'string',
 			default: '',
-			displayName: 'Streamline Shop ID',
+			displayName: 'Shop ID',
+			description: 'Your Shopify shop ID. Find it in the Streamline Connector app under API Keys.',
+			typeOptions: {
+				password: true,
+			},
+		},
+		{
+			name: 'secretKey',
+			type: 'string',
+			default: '',
+			required: true,
+			displayName: 'API Key',
+			description: 'Your secret API key. Generate it in the Streamline Connector app under API Keys.',
 			typeOptions: {
 				password: true,
 			},
@@ -32,6 +44,9 @@ export class StreamlineApi implements ICredentialType {
 			qs: {
 				shopId: '={{$credentials.apiKey}}',
 			},
+			headers: {
+				Authorization: '=Bearer {{$credentials.secretKey}}',
+			},
 		},
 	};
 
@@ -43,6 +58,9 @@ export class StreamlineApi implements ICredentialType {
 			qs: {
 				shopId: '={{$credentials.apiKey}}',
 				productTitle: 'test',
+			},
+			headers: {
+				Authorization: '=Bearer {{$credentials.secretKey}}',
 			},
 		},
 	};
