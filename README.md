@@ -93,7 +93,8 @@ To use the Streamline node, you need to set up Streamline API credentials:
 1. In n8n, go to **Credentials → New**
 2. Search for and select **Streamline API**
 3. Enter your credentials:
-   - **Streamline Shop ID** – Your Streamline access key (found in the app dashboard > Any endpoint page)
+   - **Shop ID** – Your Shopify shop ID (found in the Streamline Connector app under **API Keys**)
+   - **API Key** – Your secret API key (generate one in the Streamline Connector app under **API Keys**)
 4. Click **Save** and test the connection
 
 Once configured, select these credentials when using any Streamline node in your workflows.
